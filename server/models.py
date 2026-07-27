@@ -13,6 +13,14 @@ class Exercise(db.Model):
     equipment_needed = db.Column(db.Boolean, default=False)
 
 
+class Workout(db.Model):
+    __tablename__ = 'workouts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)  # Duration in minutes
+    notes =db.Column(db.Text)
+
 
 
 
