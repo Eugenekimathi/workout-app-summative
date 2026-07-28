@@ -1,4 +1,4 @@
-from marshmallow import fields, validate, validates, ValidationError
+from marshmallow import fields, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from models import *
@@ -8,6 +8,7 @@ class WorkoutExerciseSchema(SQLAlchemyAutoSchema):
         model = WorkoutExercise
         load_instance = True
         include_fk = True
+        sqla_session = db.session
 
 
     workout = fields.Nested(
@@ -24,6 +25,7 @@ class ExerciseSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Exercise
         load_instance = True
+        sqla_session = db.session
 
 
     workout_exercises = fields.Nested(
@@ -58,6 +60,7 @@ class WorkoutSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Workout
         load_instance = True
+        sqla_session = db.session
 
 
     workout_exercises = fields.Nested(
