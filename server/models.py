@@ -10,19 +10,19 @@ class Exercise(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False , unique=True)
     category = db.Column(db.String(50), nullable=False)
-    equipment_needed = db.Column(db.Boolean, default=False)
+    equipment_needed = db.Column(db.Boolean, nullable=False, default=False)
 
     workout_exercises = db.relationship("WorkoutExercise", back_populates="exercise", cascade="all, delete-orphan")
 
     # Model Validation
     @validates("name")
     def validate_name(self, key, value):
-        if not value:
+        if not value or not value.strip():
             raise ValueError("Exercise name cannot be empty.")
-        if len(value.strip()) < 2:
-            raise ValueError("Exercise name must be at least 2 characters.")
-
-        return value.strip()
+        value = value.strip()
+        if len(value) < 2:
+            raise ValueError("Exercise name must be at least 2 characters long.")
+        return value
 
     @validates("category")
     def validate_category(self, key, value):
@@ -46,29 +46,29 @@ class Workout(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
-    duration = db.Column(db.Integer, nullable=False)  # Duration in minutes
-    notes =db.Column(db.Text)
+    duration_minutes = db.Column(db.Integer, nullable=False)  # Duration in minutes
+    notes = db.Column(db.Text)
 
     workout_exercises = db.relationship("WorkoutExercise", back_populates="workout", cascade="all, delete-orphan")
 
     # Table Constraints
     __table_args__ = (
-        db.CheckConstraint('duration > 0', name='check_duration_positive'),
+        db.CheckConstraint('duration_minutes > 0', name='check_duration_minutes_positive'),
     )
 
     # Model Validation
-    @validates("duration")
+    @validates("duration_minutes")
     def validate_duration(self, key, value):
         if value <= 0:
             raise ValueError("Duration must be a positive integer.")
         return value
 
 
-class workoutExercise(db.Model):
+class WorkoutExercise(db.Model):
     __tablename__ = "workout_exercises"  
 
     id = db.Column(db.Integer, primary_key=True) 
-    workout_id = db.Column(db.Integer, db.ForeignKey("workouts.id"), nullabe=False)
+    workout_id = db.Column(db.Integer, db.ForeignKey("workouts.id"), nullable=False)
     exercise_id = db.Column(db.Integer, db.ForeignKey("exercises.id"), nullable=False)
     reps = db.Column(db.Integer)
     sets = db.Column(db.Integer)
