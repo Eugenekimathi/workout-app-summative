@@ -11,6 +11,50 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # Define Routes here
+# GET /workouts
+@app.route("/workouts", methods=["GET"])
+def get_workouts():
+    pass
+
+# GET /workouts/<id>
+@app.route("/workouts/<int:id>", methods=["GET"])
+def get_workout(id):
+    pass
+
+# POST /workouts
+@app.route("/workouts", methods=["POST"])
+def create_workout():
+    pass
+
+# DELETE /workouts/<id>
+@app.route("/workouts/<int:id>", methods=["DELETE"])
+def delete_workout(id):
+    pass
+
+# GET /exercises
+@app.route("/exercises", methods=["GET"])
+def get_exercises():
+    pass
+
+# GET /exercises/<id>
+@app.route("/exercises/<int:id>", methods=["GET"])
+def get_exercise(id):
+    pass
+
+# POST /exercises
+@app.route("/exercises", methods=["POST"])
+def create_exercise():
+    pass
+
+# DELETE /exercises/<id>
+@app.route("/exercises/<int:id>", methods=["DELETE"])  
+def delete_exercise(id):
+    pass
+
+#  POST  workout exercise relationship
+@app.route("/workouts/<int:workout_id>/exercises/<int:exercise_id>", methods=["POST"])
+def create_workout_exercise(workout_id, exercise_id):
+    pass
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
