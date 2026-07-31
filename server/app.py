@@ -1,7 +1,7 @@
 from flask import Flask, make_response ,request
 from flask_migrate import Migrate
 
-from models import *
+from models import Workout, Exercise, WorkoutExercise, db
 from schemas import (
     exercise_schema,
     exercises_schema,
