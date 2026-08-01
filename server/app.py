@@ -1,8 +1,8 @@
 from flask import Flask, make_response ,request
 from flask_migrate import Migrate
 
-from models import Workout, Exercise, WorkoutExercise, db
-from schemas import (
+from server.models import Workout, Exercise, WorkoutExercise, db
+from server.schemas import (
     exercise_schema,
     exercises_schema,
     workout_schema,
@@ -11,10 +11,21 @@ from schemas import (
 )
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_PATH = BASE_DIR / "instance" / "app.db"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DATABASE_PATH}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+import os
+
+with app.app_context():
+    print("Database:", db.engine.url)
+    print("Exists:", os.path.exists(db.engine.url.database))
 migrate = Migrate(app, db)
 
 # Define Routes here

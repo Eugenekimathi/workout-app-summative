@@ -6,19 +6,19 @@ The **Workout App Summative** is a Flask REST API that allows users to manage wo
 
 The application manages three related entities:
 
-- **Workout** – stores workout sessions including the workout date, duration, and notes.
-- **Exercise** – stores available exercises and their categories.
-- **WorkoutExercise** – serves as the association table between workouts and exercises while storing workout-specific details such as sets, repetitions, and duration.
+* **Workout** – stores workout sessions including the workout date, duration, and notes.
+* **Exercise** – stores available exercises and their categories.
+* **WorkoutExercise** – serves as the association table between workouts and exercises while storing workout-specific details such as sets, repetitions, and duration.
 
 This project demonstrates:
 
-- RESTful API endpoints
-- SQLAlchemy models and relationships
-- Marshmallow serialization and validation
-- Model-level validations
-- Database table constraints
-- Database migrations
-- Database seeding
+* RESTful API endpoints
+* SQLAlchemy models and relationships
+* Marshmallow serialization and validation
+* Model-level validations
+* Database table constraints
+* Database migrations
+* Database seeding
 
 ---
 
@@ -27,33 +27,37 @@ This project demonstrates:
 ```text
 workout-app-summative/
 │
+├── migrations/                 # Flask-Migrate migration files
+│   └── versions/
+│
+├── instance/
+│   └── app.db                  # SQLite database
+│
 ├── server/
-│   ├── app.py                 # Flask application and API routes
-│   ├── models.py              # SQLAlchemy models, relationships & validations
-│   ├── schemas.py             # Marshmallow schemas and serialization
-│   ├── seed.py                # Populates the database with starter data
-│   ├── migrations/            # Flask-Migrate migration files
-│   └── instance/
-│       └── app.db             # SQLite database
+│   ├── app.py                  # Flask application and API routes
+│   ├── models.py               # SQLAlchemy models, relationships & validations
+│   ├── schemas.py              # Marshmallow schemas and serialization
+│   ├── seed.py                 # Populates the database with starter data
+│   └── __init__.py
 │
 ├── Pipfile
 ├── Pipfile.lock
 ├── README.md
-└── requirements.txt
+
 ```
 
 ---
 
 # Technologies Used
 
-- Python 3
-- Flask
-- Flask-SQLAlchemy
-- Marshmallow
-- Flask-Migrate
-- SQLite
-- Pipenv
-- Postman
+* Python 3
+* Flask
+* Flask-SQLAlchemy
+* Marshmallow
+* Flask-Migrate
+* SQLite
+* Pipenv
+* Postman
 
 ---
 
@@ -80,24 +84,68 @@ pipenv shell
 
 ---
 
+# Database Setup and Migrations
+
+The project uses **Flask-Migrate** to manage database migrations.
+
+All commands should be run from the **project root directory**:
+
+```text
+workout-app-summative/
+```
+
+Set the Flask application.
+
+### Git Bash / Linux / macOS
+
+```bash
+export FLASK_APP=server.app
+```
+
+### Windows PowerShell
+
+```powershell
+$env:FLASK_APP="server.app"
+```
+
+Apply the existing migrations:
+
+```bash
+flask db upgrade
+```
+
+This creates the required database tables:
+
+* `workouts`
+* `exercises`
+* `workout_exercises`
+
+---
+
+# Seeding the Database
+
+The project includes a seed file that creates starter records for every model.
+
+Run:
+
+```bash
+python -m server.seed
+```
+
+The seed file creates:
+
+* Six exercises
+* Three workouts
+* Six workout-exercise relationships
+
+---
+
 # Running the Application
 
-Populate the database with starter data.
+Start the Flask development server from the project root:
 
 ```bash
-python server/seed.py
-```
-
-After installing the dependencies, setting up the database, and seeding it with sample data, navigate to the `server` directory if you are not already there:
-
-```bash
-cd server
-```
-
-Start the Flask development server:
-
-```bash
-python app.py
+python -m server.app
 ```
 
 The application will start on:
@@ -106,7 +154,53 @@ The application will start on:
 http://127.0.0.1:5555
 ```
 
-You can now test the API endpoints using **Postman**.
+The API is now ready for testing using **Postman**.
+
+> Do not run the application from inside the `server` directory. Running from the project root ensures Flask uses the correct database location.
+
+---
+
+# Complete Setup Flow
+
+After cloning the project:
+
+```bash
+pipenv install
+
+pipenv shell
+
+export FLASK_APP=server.app
+
+flask db upgrade
+
+python -m server.seed
+
+python -m server.app
+```
+
+---
+
+# Database Migration Commands
+
+If SQLAlchemy models are changed:
+
+Create a migration:
+
+```bash
+flask db migrate -m "describe changes"
+```
+
+Apply the migration:
+
+```bash
+flask db upgrade
+```
+
+Check the current migration version:
+
+```bash
+flask db current
+```
 
 ---
 
@@ -121,7 +215,7 @@ You can now test the API endpoints using **Postman**.
 | POST   | `/workouts`      | Create a new workout        |
 | DELETE | `/workouts/<id>` | Delete a workout            |
 
-### Exercise Endpoints
+## Exercise Endpoints
 
 | Method | Endpoint          | Description                  |
 | ------ | ----------------- | ---------------------------- |
@@ -130,7 +224,7 @@ You can now test the API endpoints using **Postman**.
 | POST   | `/exercises`      | Create a new exercise        |
 | DELETE | `/exercises/<id>` | Delete an exercise           |
 
-### Workout Exercise Endpoint
+## Workout Exercise Endpoint
 
 | Method | Endpoint                                         | Description                  |
 | ------ | ------------------------------------------------ | ---------------------------- |
@@ -142,12 +236,17 @@ You can now test the API endpoints using **Postman**.
 
 The API endpoints can be tested using **Postman**.
 
-### Create a Workout
+## Create a Workout
 
-- **Method:** POST
-- **URL:** `http://127.0.0.1:5555/workouts`
+**Method:** POST
 
-**JSON Body**
+**URL:**
+
+```text
+http://127.0.0.1:5555/workouts
+```
+
+JSON Body:
 
 ```json
 {
@@ -159,19 +258,29 @@ The API endpoints can be tested using **Postman**.
 
 ---
 
-### Get All Workouts
+## Get All Workouts
 
-- **Method:** GET
-- **URL:** `http://127.0.0.1:5555/workouts`
+**Method:** GET
+
+**URL:**
+
+```text
+http://127.0.0.1:5555/workouts
+```
 
 ---
 
-### Create an Exercise
+## Create an Exercise
 
-- **Method:** POST
-- **URL:** `http://127.0.0.1:5555/exercises`
+**Method:** POST
 
-**JSON Body**
+**URL:**
+
+```text
+http://127.0.0.1:5555/exercises
+```
+
+JSON Body:
 
 ```json
 {
@@ -183,12 +292,17 @@ The API endpoints can be tested using **Postman**.
 
 ---
 
-### Add an Exercise to a Workout
+## Add an Exercise to a Workout
 
-- **Method:** POST
-- **URL:** `http://127.0.0.1:5555/workouts/1/exercises/2`
+**Method:** POST
 
-**JSON Body**
+**URL:**
+
+```text
+http://127.0.0.1:5555/workouts/1/exercises/2
+```
+
+JSON Body:
 
 ```json
 {
@@ -206,9 +320,9 @@ The project uses Marshmallow schemas to serialize and deserialize application da
 
 Schemas included:
 
-- WorkoutSchema
-- ExerciseSchema
-- WorkoutExerciseSchema
+* WorkoutSchema
+* ExerciseSchema
+* WorkoutExerciseSchema
 
 Nested schemas are used to serialize related objects while preventing circular references.
 
@@ -240,14 +354,14 @@ Marshmallow validates incoming request data before it reaches the database.
 
 Implemented validations include:
 
-- Exercise name must contain at least two characters.
-- Exercise category must be one of:
-  - Strength
-  - Cardio
-  - Flexibility
-  - Balance
+* Exercise name must contain at least two characters.
+* Exercise category must be one of:
 
-- Workout duration must be greater than zero.
+  * Strength
+  * Cardio
+  * Flexibility
+  * Balance
+* Workout duration must be greater than zero.
 
 Invalid requests return a **400 Bad Request** response.
 
@@ -259,44 +373,26 @@ SQLAlchemy model validators enforce business rules before data is committed.
 
 Examples include:
 
-- Exercise name cannot be empty.
-- Exercise name must contain at least two characters.
-- Workout duration must be positive.
-- WorkoutExercise repetitions cannot be negative.
-- WorkoutExercise sets cannot be negative.
-- WorkoutExercise duration cannot be negative.
+* Exercise name cannot be empty.
+* Exercise name must contain at least two characters.
+* Workout duration must be positive.
+* WorkoutExercise repetitions cannot be negative.
+* WorkoutExercise sets cannot be negative.
+* WorkoutExercise duration cannot be negative.
 
 ---
 
 # Table Constraints
 
-Database constraints ensure data integrity by preventing invalid data from being stored.
+Database constraints ensure data integrity.
 
 Implemented constraints include:
 
-- Unique exercise names.
-- Workout duration must be greater than zero.
-- Repetitions must be non-negative.
-- Sets must be non-negative.
-- Exercise duration must be non-negative.
-
----
-
-# Seed Data
-
-The project includes a seed file that creates starter records for every model.
-
-Running:
-
-```bash
-python server/seed.py
-```
-
-creates:
-
-- Six exercises
-- Three workouts
-- Six workout-exercise relationships
+* Unique exercise names.
+* Workout duration must be greater than zero.
+* Repetitions must be non-negative.
+* Sets must be non-negative.
+* Exercise duration must be non-negative.
 
 ---
 
@@ -315,12 +411,12 @@ The API returns meaningful HTTP status codes.
 
 # Future Improvements
 
-- Add update (PATCH) endpoints
-- User authentication
-- Workout plans
-- Exercise search and filtering
-- Pagination
-- Workout statistics and reporting
+* Add update (PATCH) endpoints
+* User authentication
+* Workout plans
+* Exercise search and filtering
+* Pagination
+* Workout statistics and reporting
 
 ---
 
@@ -329,3 +425,4 @@ The API returns meaningful HTTP status codes.
 **Kimathi**
 
 Flask SQLAlchemy Workout App Summative
+

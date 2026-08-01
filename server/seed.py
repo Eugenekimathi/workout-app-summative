@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from datetime import date
-from app import app
-from models import *
+from server.app import app
+from server.models import *
 
 with app.app_context():
 

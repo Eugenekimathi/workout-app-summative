@@ -1,7 +1,7 @@
 from marshmallow import fields, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from models import *
+from server.models import Workout, Exercise, WorkoutExercise, db
 
 class WorkoutExerciseSchema(SQLAlchemyAutoSchema):
     class Meta:
